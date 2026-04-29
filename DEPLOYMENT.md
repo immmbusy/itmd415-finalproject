@@ -25,34 +25,34 @@ DROP TABLE IF EXISTS Department;
 -- 2. Create Department Table
 -- =============================================
 CREATE TABLE Department (
-    dept_id    BIGINT PRIMARY KEY,
-    dept_name  VARCHAR(100) NOT NULL UNIQUE
+                            dept_id    BIGINT PRIMARY KEY,
+                            dept_name  VARCHAR(100) NOT NULL UNIQUE
 );
 
 -- =============================================
 -- 3. Create Employee Table
 -- =============================================
 CREATE TABLE Employee (
-    emp_id      BIGINT PRIMARY KEY,
-    full_name   VARCHAR(200) NOT NULL,
-    title       VARCHAR(100) NOT NULL,
-    dept_id     BIGINT NOT NULL,
-    salary      DECIMAL(10,2) NOT NULL,
-    hire_date   DATE,
-    CONSTRAINT fk_employee_department 
-        FOREIGN KEY (dept_id) REFERENCES Department(dept_id)
+                          emp_id      BIGINT PRIMARY KEY,
+                          full_name   VARCHAR(200) NOT NULL,
+                          title       VARCHAR(100) NOT NULL,
+                          dept_id     BIGINT NOT NULL,
+                          salary      DECIMAL(10,2) NOT NULL,
+                          hire_date   DATE,
+                          CONSTRAINT fk_employee_department
+                              FOREIGN KEY (dept_id) REFERENCES Department(dept_id)
 );
 
 -- =============================================
 -- 4. Insert Sample Departments (6 departments)
 -- =============================================
-INSERT INTO Department (dept_id, dept_name) VALUES 
-(1, 'Information Technology'),
-(2, 'Human Resources'),
-(3, 'Finance & Accounting'),
-(4, 'Sales & Marketing'),
-(5, 'Operations'),
-(6, 'Research & Development');
+INSERT INTO Department (dept_id, dept_name) VALUES
+                                                (1, 'Information Technology'),
+                                                (2, 'Human Resources'),
+                                                (3, 'Finance & Accounting'),
+                                                (4, 'Sales & Marketing'),
+                                                (5, 'Operations'),
+                                                (6, 'Research & Development');
 
 -- =============================================
 -- 5. Insert Sample Employees (20 employees)
@@ -100,3 +100,6 @@ SELECT COUNT(*) AS emp_count  FROM Employee;
 
 SELECT * FROM Department ORDER BY dept_id;
 SELECT * FROM Employee ORDER BY emp_id;
+```
+
+---
