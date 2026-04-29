@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Employees</title>
+    <style>
+        .filter-panel { margin-bottom: 20px; padding: 15px; background: #f4f4f4; border-radius: 5px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+        th, td { padding: 8px; text-align: left; }
+    </style>
+</h:head>
+
+<h:body>
+
+    <!-- Read deptId and q from the URL, e.g. employees.xhtml?deptId=2 -->
+    <f:metadata>
+        <f:viewParam name="deptId" value="#{employeeListBean.deptId}" />
+        <f:viewParam name="q" value="#{employeeListBean.q}" />
+    </f:metadata>
+
+    <h1>Employees</h1>
+
+    <h:messages id="messages" globalOnly="true"/>
+
+    <h:form id="filterForm">
+
+        <h:panelGrid columns="2" styleClass="filter-panel">
+            <h:outputLabel value="Department:" for="dept"/>
+            <h:selectOneMenu id="dept" value="#{employeeListBean.deptId}">
+                <f:selectItem itemLabel="-- All --" itemValue="#{null}" />
+                <f:selectItems value="#{employeeListBean.departments}"
+                               var="d"
+                               itemLabel="#{d.deptName}"
+                               itemValue="#{d.deptId}" />
+            </h:selectOneMenu>
+
+            <h:outputLabel value="Search (name or title):" for="q"/>
+            <h:inputText id="q" value="#{employeeListBean.q}" />
+
+            <h:outputText value=""/>
+            <h:commandButton id="applyBtn" value="Apply">
+                <!-- re-render the results area -->
+                <f:ajax execute="@form" render="results" />
+            </h:commandButton>
+        </h:panelGrid>
+
+        <h:panelGroup id="results">
+            <!-- (Optional) quick debug; remove later -->
+            <!-- <p>Dept count: #{employeeListBean.departments.size()}</p>
+            <p>Emp count: #{employeeListBean.employees.size()}</p> -->
+
+            <h:dataTable value="#{employeeListBean.employees}" var="e" border="1">
+                <h:column><f:facet name="header">ID</f:facet>#{e.empId}</h:column>
+                <h:column><f:facet name="header">Name</f:facet>#{e.fullName}</h:column>
+                <h:column><f:facet name="header">Title</f:facet>#{e.title}</h:column>
+                <h:column><f:facet name="header">Department</f:facet>#{e.department.deptName}</h:column>
+
+                <h:column>
+                    <f:facet name="header">Salary</f:facet>
+                    <h:outputText value="#{e.salary}">
+                        <f:convertNumber type="currency" currencySymbol="$" />
+                    </h:outputText>
+                </h:column>
+
+                <h:column><f:facet name="header">Hire Date</f:facet>#{e.hireDate}</h:column>
+
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
+                    <h:link value="Edit" outcome="editEmployee.xhtml"
+                            rendered="#{request.isUserInRole('ADMIN')}">
+                        <f:param name="empId" value="#{e.empId}" />
+                    </h:link>
+                </h:column>
+            </h:dataTable>
+
+            <h:panelGroup rendered="#{empty employeeListBean.employees}">
+                <p>No employees found.</p>
+            </h:panelGroup>
+        </h:panelGroup>
+
+    </h:form>
+
+    <p>
+        <h:link value="View All Departments" outcome="departments.xhtml"/>
+    </p>
+
+</h:body>
+</html>

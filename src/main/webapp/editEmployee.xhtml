@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Edit Employee</title>
+</h:head>
+
+<h:body>
+
+    <!-- Load employee by empId from URL -->
+    <f:metadata>
+        <f:viewParam name="empId" value="#{employeeEditBean.empId}" />
+        <f:viewAction action="#{employeeEditBean.load}" />
+    </f:metadata>
+
+    <h1>Edit Employee</h1>
+
+    <!-- Global messages for save success/fail -->
+    <h:messages id="globalMessages" globalOnly="true" styleClass="success" errorStyle="color: red;" />
+
+    <h:panelGroup id="editPanel" rendered="#{employeeEditBean.employee != null}">
+        <p><b>ID:</b> #{employeeEditBean.employee.empId}</p>
+        <p><b>Name:</b> #{employeeEditBean.employee.fullName}</p>
+
+        <h:form id="editForm">
+
+            <div style="margin-bottom: 10px;">
+                <h:outputLabel for="title" value="Title: " />
+                <h:inputText id="title" value="#{employeeEditBean.title}"
+                             required="true"
+                             requiredMessage="Title must not be blank.">
+                    <f:validateLength minimum="1" maximum="100"/>
+                </h:inputText>
+                <h:message for="title" style="color: orange; font-size: 0.9em;" />
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <h:outputLabel for="salary" value="Salary: $ " />
+                <h:inputText id="salary" value="#{employeeEditBean.salary}">
+                    <f:validateDoubleRange minimum="0" />
+                    <f:validateLongRange maximum="9999999999" />
+                </h:inputText>
+                <h:message for="salary" style="color: orange; font-size: 0.9em;" />
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h:commandButton value="Save" action="#{employeeEditBean.save}" immediate="false">
+                    <f:ajax render="@form" listener="#{employeeEditBean.save}"/>
+                </h:commandButton>
+
+                <h:link value="Cancel" outcome="employees.xhtml" styleClass="cancel-btn" />
+            </div>
+
+            <div style="margin-top: 15px;">
+                <h:messages id="formMessages" globalOnly="false" styleClass="info-message"/>
+            </div>
+
+        </h:form>
+    </h:panelGroup>
+
+    <h:panelGroup id="notFoundPanel" rendered="#{employeeEditBean.employee == null}">
+        <p style="color: red;">Employee not found (ID: #{employeeEditBean.empId})</p>
+        <h:link value="Back to Employees" outcome="employees.xhtml"/>
+    </h:panelGroup>
+
+</h:body>
+</html>

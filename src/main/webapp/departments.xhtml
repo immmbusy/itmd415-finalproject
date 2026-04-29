@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+    <h:head><title>Departments</title></h:head>
+    <h:body>
+        <h1>Departments</h1>
+
+        <h:dataTable value="#{departmentBean.departments}" var="d" border="1">
+            <h:column><f:facet name="header">ID</f:facet>#{d.deptId}</h:column>
+            <h:column><f:facet name="header">Name</f:facet>#{d.deptName}</h:column>
+            <h:column>
+                <h:link value="View Employees" outcome="employees">
+                    <f:param name="deptId" value="#{d.deptId}" />
+                </h:link>
+            </h:column>
+        </h:dataTable>
+
+        <p><h:link value="All Employees" outcome="employees"/></p>
+    </h:body>
+</html>

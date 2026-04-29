@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
+             version="3.2">
+
+    <persistence-unit name="hrPU" transaction-type="JTA">
+        <!-- Must match your Payara JDBC Resource JNDI name -->
+        <jta-data-source>jdbc/hr-directory</jta-data-source>
+        <properties>
+            <!-- Tables already exist; do not auto-create/drop -->
+            <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
+
+            <!-- Optional: helpful logs while debugging -->
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>
