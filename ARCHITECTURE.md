@@ -1,0 +1,26 @@
+# Architecture
+
+- The application follows a layered Jakarta EE architecture: JSF View → CDI Backing Beans → EJB Services → JPA persistence.
+- **Facelets pages** provide the UI:
+  - `departments.xhtml` shows all departments and links to employees filtered by department.
+  - `employees.xhtml` shows employees and supports filtering/searching.
+  - `editEmployee.xhtml` allows ADMIN users to update title/salary.
+- **Backing beans** are thin controllers and hold only UI state:
+  - `DepartmentBean` exposes `getDepartments()` for the departments page.
+  - `EmployeeListBean` holds filter/search fields (`deptId`, `q`) and exposes `getEmployees()` and `getDepartments()` for dropdown.
+  - `EmployeeEditBean` loads an employee by `empId` and submits updates via the service.
+- **Service layer** owns business logic and transaction boundaries:
+  - `DepartmentService` loads departments via typed JPQL.
+  - `EmployeeService` performs employee list queries (filter/search) and updates.
+- **JPA Entities** map directly to the schema:
+  - `Department` maps `dept_id`, `dept_name`.
+  - `Employee` maps `emp_id`, `full_name`, `title`, `salary`, `hire_date` and `@ManyToOne` to `Department`.
+- **Persistence configuration** is in `META-INF/persistence.xml` using JTA datasource `jdbc/hr`.
+- **JPQL search** uses parameters (`:deptId`, `:term`, `:likeTerm`) to prevent string concatenation and SQL injection.
+- **RBAC** is enforced via Payara container-managed security:
+  - URL-based constraints in `web.xml` restrict edit page to `ADMIN`.
+  - Method-level constraint in `EmployeeService` (`@RolesAllowed("ADMIN")`) protects writes even if URL protection is bypassed.
+- **Validation** is performed in JSF:
+  - Title field is required (`required="true"`).
+  - Salary field uses range validation (`validateDoubleRange minimum="0"`).
+- EntityManager is only used in the service layer; no database logic exists in XHTML pages.
